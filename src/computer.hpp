@@ -1,8 +1,6 @@
 #include <vector>
 #include "utils.hpp"
 
-using std::vector;
-
-vector<Pos> options(const Grid &grid);
-int evaluate(const Grid &grid, Pos p); 
+std::vector<Pos> options(const Grid &grid);
+int evaluate(Grid &grid, Pos p, char sign); 
 Pos find_best(Grid &grid, char sign);

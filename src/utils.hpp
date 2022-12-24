@@ -13,13 +13,15 @@ struct Grid {
     vector<char> data;
     int size;
 
+    int empty; // the amount of empty cells
+
     Grid();
     Grid(int s);
 
     char at(Pos m) const;
     void put(Pos m, char c);
 
-    void display();
-    bool check(Pos m, char sign);
+    void display() const;
+    bool check(Pos m, char sign) const;
 };
 

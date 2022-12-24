@@ -15,6 +15,7 @@ Grid::Grid(int s)
 {
     size = s;
     data = vector<char>(size * size, ' ');
+    empty = size * size;
 }
 
 char Grid::at(Pos p) const 
@@ -27,9 +28,14 @@ void Grid::put(Pos p, char c)
 {
     // put char c on position (x, y)
     data[p.y * size + p.x] = c;
+
+    char before = at(p);
+
+    if ((before == ' ') && (c != ' ')) empty--;
+    if ((before != ' ') && (c == ' ')) empty++;
 }
 
-void Grid::display()
+void Grid::display() const
 {
     for (int y = 0; y < size - 1; y++)
     {
@@ -51,7 +57,7 @@ void Grid::display()
     cout << at({size - 1, size - 1}) << "\n" << endl;
 }
 
-bool Grid::check(Pos p, char sign)
+bool Grid::check(Pos p, char sign) const
 {
     int to_win = (size > 4) ? 5 : 3;
     int init_val = (at(p) == ' ') ? 1 : 0;
@@ -64,7 +70,7 @@ bool Grid::check(Pos p, char sign)
         {
 
             int xnew = p.x - i + j, ynew = p.y - i + j;
-            int xdiag = p.x - i - j, ydiag = p.y + i - j;
+            int xdiag = p.x - i + j, ydiag = p.y + i - j;
 
             // count if belongs to a certain line
             if (Pos{xnew, 0}.inrange(size) &&
@@ -87,6 +93,10 @@ bool Grid::check(Pos p, char sign)
             //   << " " << at({xdiag, ydiag}) << "\n";
 
             }
+
+            // cout << xdiag << " "  << ydiag << " " << Pos{xdiag, ydiag}.inrange(size) << "\n";
+
+            
             // if (Pos{p.x - i - j, ynew}.inrange(size))
             // cout << p.x - i - j << " "  << ynew << " " << at({p.x - i - j, ynew}) << "\n";
             
@@ -102,6 +112,21 @@ bool Grid::check(Pos p, char sign)
             (diag1 >= to_win) || (diag2 >= to_win))
             return 1;
     }
+
+    // // check rows
+    // for (int shift = 0; shift < to_win; shift++)
+    // {
+    //     for (int index = 0; index < to_win; index++)
+    //     {
+    //         Pos new_pos {p.x - shift + index, p.y - shift + index};
+
+    //         if (not new_pos.inrange(size))
+    //             break;
+
+            
+    //     }
+    // }
+    
 
     return 0;
 }
