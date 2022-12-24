@@ -13,6 +13,7 @@ struct Grid {
     vector<char> data;
     int size;
 
+    Grid();
     Grid(int s);
 
     char at(Pos m) const;

@@ -9,6 +9,8 @@ bool Pos::inrange(int size)
            (0 <= y) && (y < size);
 }
 
+Grid::Grid() { }
+
 Grid::Grid(int s)
 {
     size = s;
@@ -46,7 +48,7 @@ void Grid::display()
     {
         cout << at({x, size - 1}) << '|';
     }
-    cout << at({size - 1, size - 1}) << "\n\n";
+    cout << at({size - 1, size - 1}) << "\n" << endl;
 }
 
 bool Grid::check(Pos p, char sign)
@@ -62,6 +64,7 @@ bool Grid::check(Pos p, char sign)
         {
 
             int xnew = p.x - i + j, ynew = p.y - i + j;
+            int xdiag = p.x - i - j, ydiag = p.y + i - j;
 
             // count if belongs to a certain line
             if (Pos{xnew, 0}.inrange(size) &&
@@ -76,10 +79,17 @@ bool Grid::check(Pos p, char sign)
                 at({xnew, ynew}) == sign)
                 diag1++;
 
-            if (Pos{p.x - i - j, ynew}.inrange(size) &&
-                at({p.x - i - j, ynew}) == sign)
+            if (Pos{xdiag, ydiag}.inrange(size) &&
+                at({xdiag, ydiag}) == sign)
+            {
                 diag2++;
-            cout << at({p.x - i - j, ynew}) << "\n";
+            //     cout << xdiag << " "  << ydiag 
+            //   << " " << at({xdiag, ydiag}) << "\n";
+
+            }
+            // if (Pos{p.x - i - j, ynew}.inrange(size))
+            // cout << p.x - i - j << " "  << ynew << " " << at({p.x - i - j, ynew}) << "\n";
+            
 
             // cout << ver << " " << hor << " ";
             // cout << "\n" << i << " " << j << "\n"
@@ -87,6 +97,7 @@ bool Grid::check(Pos p, char sign)
             // cout << to_win << "\n";
             // cout << " - - - \n";
         }
+        // cout << "- - -\n";
         if ((ver >= to_win) || (hor >= to_win) ||
             (diag1 >= to_win) || (diag2 >= to_win))
             return 1;
