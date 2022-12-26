@@ -33,21 +33,17 @@ Game::Game() {
     // if with_computer then name1 is "Computer"
     // and name2 is not
 
-    if (!with_computer) {
-        // randomly changing the order of playing; always name1, name2
-        srand((unsigned) time(NULL));
-        bool should_swap = rand() % 2;
-        if (should_swap) swap(name1, name2); // the contents of
-    } else {
-        srand((unsigned) time(NULL));
-        bool should_swap = rand() % 2;
-        if (should_swap) swap(sign1, sign2); // the contents of
-    }
+    // randomly changing the order of playing; always name1, name2
+    srand((unsigned) time(NULL));
+    bool should_swap_order = rand() % 2;
+    if (should_swap_order) swap(name1, name2); // the contents of
+
+    srand((unsigned) time(NULL)+1);
+    bool should_swap_signs = rand() % 2;
+    if (should_swap_signs) swap(sign1, sign2); // the contents of
 
     grid = Grid(size);
     
-    srand((unsigned) time(NULL));
-    bool computer_first = rand() % 2;
 
     cout << "Player " << name1 << " has sign " << sign1 << ".\n"; 
     cout << "Player " << name2 << " has sign " << sign2 << ".\n"; 
@@ -64,33 +60,11 @@ void Game::play() {
 
     char who_won = ' ';
     while (true) {
+        who_won = turn(grid, name1, sign1);
+        if (who_won != ' ') break;
 
-        if (with_computer) {
-
-            if(computer_first) {
-                who_won = turn(grid, name1, sign1);
-                if (who_won != ' ') break; 
-
-                who_won = turn(grid, name2, sign2);
-                if (who_won != ' ') break; 
-
-            } else {
-                who_won = turn(grid, name2, sign2);
-                if (who_won != ' ') break; 
-
-                who_won = turn(grid, name1, sign1);
-                if (who_won != ' ') break; 
-
-            }
-
-        } else {
-            who_won = turn(grid, name1, sign1);
-            if (who_won != ' ') break;
-
-            who_won = turn(grid, name2, sign2);
-            if (who_won != ' ') break;
-        }
-
+        who_won = turn(grid, name2, sign2);
+        if (who_won != ' ') break;
     }
 
     // F stands for Full
@@ -142,7 +116,7 @@ Pos Game::player_move(Grid &grid, const string name, const char sign) {
     cout << "Player " << name << " moves at:\n";
     cin >> p.x >> p.y;
 
-    if (p.inrange(grid.size) && (grid.at(p)==' ')) {
+    if (p.inrange(grid.getsize()) && (grid.at(p)==' ')) {
         grid.put(p, sign);
     }
     else {

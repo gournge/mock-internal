@@ -2,6 +2,8 @@
 #include "computer.hpp"
 #include "utils.hpp"
 
+using std::cout;
+
 void test1();
 void test2();
 void test3();
@@ -40,7 +42,7 @@ void test1() {
     grid.display();
     grid.put(p, 'X');
 
-    cout << evaluate(grid, p, 'X');
+    cout << evaluate(5, grid, p, 'X');
 
     // cout << grid.check(p, 'X');
 }
@@ -120,11 +122,13 @@ void test4() {
 
     grid.display();
 
-    cout << evaluate(grid, {0, 0}, 'O') << "\n";
+    const int max_depth = 10;
 
-    cout << evaluate(grid, {2, 3}, 'O') << "\n";
+    cout << evaluate(max_depth, grid, {0, 0}, 'O') << "\n";
 
-    cout << evaluate(grid, {1, 1}, 'O') << "\n";
+    cout << evaluate(max_depth, grid, {2, 3}, 'O') << "\n";
+
+    cout << evaluate(max_depth, grid, {1, 1}, 'O') << "\n";
 
     // auto b = find_best(grid, 'O');
     // std::cout << b.x << " " << b.y << "\n";

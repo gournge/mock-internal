@@ -3,29 +3,25 @@
 
 using namespace std;
 
-bool Pos::inrange(int size)
-{
+bool Pos::inrange(int size) {
     return (0 <= x) && (x < size) &&
            (0 <= y) && (y < size);
 }
 
 Grid::Grid() { }
 
-Grid::Grid(int s)
-{
+Grid::Grid(int s) {
     size = s;
     data = vector<char>(size * size, ' ');
     empty = size * size;
 }
 
-char Grid::at(Pos p) const 
-{
+char Grid::at(Pos p) const {
     // contents at position (x, y)
     return data[p.y * size + p.x];
 }
 
-void Grid::put(Pos p, char c)
-{
+void Grid::put(Pos p, char c) {
     // put char c on position (x, y)
     data[p.y * size + p.x] = c;
 
@@ -33,6 +29,10 @@ void Grid::put(Pos p, char c)
 
     if ((before == ' ') && (c != ' ')) empty--;
     if ((before != ' ') && (c == ' ')) empty++;
+}
+
+int Grid::getsize() const {
+    return size;
 }
 
 void Grid::display() const

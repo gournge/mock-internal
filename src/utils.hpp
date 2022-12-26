@@ -1,27 +1,31 @@
 #pragma once
 
 #include <vector>
-using namespace std;
 
 struct Pos {
-    int x;
-    int y;
-    bool inrange(int size);
+    int x, y;
+
+    // if the vector (x, y) is contained
+    // in the square (0, 0), (size-1, size-1)
+    bool inrange(int size); 
 };
 
-struct Grid {
-    vector<char> data;
-    int size;
+class Grid {
+    public:
+        Grid();
+        Grid(int s);
 
-    int empty; // the amount of empty cells
+        int empty; // the amount of empty cells
+        int getsize() const;
 
-    Grid();
-    Grid(int s);
+        char at(Pos m) const;
+        void put(Pos m, char c);
 
-    char at(Pos m) const;
-    void put(Pos m, char c);
+        void display() const;
+        bool check(Pos m, char sign) const;
 
-    void display() const;
-    bool check(Pos m, char sign) const;
+    private:
+        std::vector<char> data;
+        int size;
 };
 

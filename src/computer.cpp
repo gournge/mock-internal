@@ -4,14 +4,15 @@
 #include "computer.hpp"
 
 using std::cout;
+using std::vector;
 
 vector<Pos> options(const Grid &grid)
 {
     vector<Pos> opts;
 
-    for (int x = 0; x < grid.size; x++)
+    for (int x = 0; x < grid.getsize(); x++)
     {
-        for (int y = 0; y < grid.size; y++)
+        for (int y = 0; y < grid.getsize(); y++)
         {
             Pos p{x, y};
             if (grid.at(p) == ' ') opts.push_back(p);
@@ -26,9 +27,15 @@ vector<Pos> options(const Grid &grid)
 // > +1 if 'O' wins 
 // > -1 if 'X' wins
 // > 0 for draw
-int evaluate(Grid &grid, Pos p, char sign) {
+int evaluate(int depth, Grid &grid, Pos p, char sign) {
 
     cout << p.x << " " << p.y << " " << sign << "\n";
+
+    // 
+    if (depth == 0) {
+        std::cout << "\n\n DEPTH LIMIT REACHED ! ! !\n";
+        return 0;
+    }
 
     grid.put(p, sign);
 
@@ -39,7 +46,7 @@ int evaluate(Grid &grid, Pos p, char sign) {
     }
 
     if (grid.empty == 0) {
-        std::cout << " DEPTH LIMIT REACHED ! ! !\n";
+        std::cout << "\n\n THE BOARD IS FULL ! ! !\n\n";
         grid.put(p, ' ');
         return 0;
     }
@@ -48,7 +55,7 @@ int evaluate(Grid &grid, Pos p, char sign) {
         int best = 2;
         for (Pos move : options(grid)) {
 
-            int e = evaluate(grid, move, 'O');
+            int e = evaluate(depth-1, grid, move, 'O');
 
             if (e == -1) {
                 grid.put(p, ' ');
@@ -64,7 +71,7 @@ int evaluate(Grid &grid, Pos p, char sign) {
         int best = -2;
         for (Pos move : options(grid)) {
 
-            int e = evaluate(grid, move, 'X');
+            int e = evaluate(depth-1, grid, move, 'X');
 
             if (e == 1) {
                 grid.put(p, ' ');
@@ -85,10 +92,11 @@ Pos find_best(Grid &grid, char sign) {
 
     auto opts = options(grid);
 
+    const int max_depth = grid.getsize()
 
     for (auto move : opts)
     {
-        int e = evaluate(grid, move, sign);
+        int e = evaluate(50, grid, move, sign);
 
         cout << e << " " << move.x << " " << move.y << "\n";
 
@@ -106,3 +114,4 @@ Pos find_best(Grid &grid, char sign) {
     // every move leads to losing
     return opts[rand() % opts.size()];
 }
+
