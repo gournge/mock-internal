@@ -28,5 +28,8 @@ class Grid {
         std::vector<char> data;
         int size;
         int empty;
+
+        // useful 
+        // std::vector<Pos> cell_importance;
 };
 

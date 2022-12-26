@@ -43,7 +43,9 @@ Game::Game() {
     if (should_swap_signs) swap(sign1, sign2); // the contents of
 
     grid = Grid(size);
-    
+    // if (with_computer) {
+
+    // }
 
     cout << "Player " << name1 << " has sign " << sign1 << ".\n"; 
     cout << "Player " << name2 << " has sign " << sign2 << ".\n"; 

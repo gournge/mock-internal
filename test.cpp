@@ -11,6 +11,7 @@ void test2();
 void test3();
 void test4();
 void test5();
+void test6();
 
 
 int main()
@@ -18,7 +19,7 @@ int main()
 
     // test1();
 
-    test1andhalf();
+    // test1andhalf();
 
     // test2();
 
@@ -28,6 +29,7 @@ int main()
 
     // test5();
 
+    test6();
 
     return 0;
 }
@@ -58,7 +60,7 @@ void test1() {
     grid.display();
     grid.put(p, ' ');
 
-    cout << evaluate(5, grid, p, 'X');
+    // cout << evaluate(5, grid, p, 'X');
 
     auto b = find_best(grid, 'X');
     std::cout << b.x << " " << b.y << "\n";
@@ -67,6 +69,12 @@ void test1() {
 }
 
 void test1andhalf() {
+
+    // X|O|   
+    // -----  
+    // O|O|   
+    // -----  
+    // X|X|O  
 
     Grid grid(3);
 
@@ -106,9 +114,10 @@ void test2() {
 
     grid.display();
 
-    // grid.put({2, 0}, 'X');
+    // cout << evaluate(9, grid, {1, 1}, 'O') << "\n";
+    // cout << evaluate(9, grid, {2, 0}, 'X') << "\n";
 
-    // cout << evaluate(9, grid, {0, 1}, 'X') << "\n";
+    // cout << evaluate(9, grid, {1, 0}, 'X') << "\n";
 
     auto b = find_best(grid, 'X');
     std::cout << b.x << " " << b.y << "\n";
@@ -124,7 +133,7 @@ void test3() {
     //  | |
     // -----
     // X| |O
-    //
+    // ans: random 
 
     Grid grid(3);
 
@@ -161,16 +170,16 @@ void test4() {
 
     grid.display();
 
-    const int max_depth = 10;
+    // const int max_depth = 10;
 
-    cout << evaluate(max_depth, grid, {0, 0}, 'O') << "\n";
+    // cout << evaluate(max_depth, grid, {0, 0}, 'O') << "\n";
 
-    cout << evaluate(max_depth, grid, {2, 3}, 'O') << "\n";
+    // cout << evaluate(max_depth, grid, {2, 3}, 'O') << "\n";
 
-    cout << evaluate(max_depth, grid, {1, 1}, 'O') << "\n";
+    // cout << evaluate(max_depth, grid, {1, 1}, 'O') << "\n";
 
-    // auto b = find_best(grid, 'O');
-    // std::cout << b.x << " " << b.y << "\n";
+    auto b = find_best(grid, 'O');
+    std::cout << b.x << " " << b.y << "\n";
 
 }
 
@@ -220,5 +229,33 @@ void test5() {
     auto duration = std::chrono::duration_cast<std::chrono::microseconds>(stop-start);
 
     cout << "Time taken: " << duration.count() << " microseconds.\n";
+
+}
+
+void test6() {
+
+    // O's turn 
+    // O| | |
+    // -------
+    // O| | |
+    // -------
+    // X|O|X|
+    // -------
+    //  | | |
+
+    Grid grid(4);
+
+    grid.put({0, 0}, 'O');
+    grid.put({0, 1}, 'O');
+    grid.put({0, 2}, 'X');
+    grid.put({1, 2}, 'O');
+    grid.put({2, 2}, 'X');
+
+    grid.display();
+
+    cout << evaluate(5, grid, {2, 3}, 'O') << "\n";
+
+    auto b = find_best(grid, 'O');
+    cout << b.x << " " << b.y << "\n";
 
 }
