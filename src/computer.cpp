@@ -27,39 +27,44 @@ vector<Pos> options(const Grid &grid)
 // > +1 if 'O' wins 
 // > -1 if 'X' wins
 // > 0 for draw
-int evaluate(int depth, Grid &grid, Pos p, char sign) {
+int evaluate(int depth, Grid &grid, const Pos p, const char sign) {
 
-    cout << p.x << " " << p.y << " " << sign << "\n";
+    cout << "\n\n";
+    grid.display();
+    cout << p.x << " " << p.y << " : " << sign << "\n";
+    cout << "empty: " << grid.getempty() << "\n";
+ 
+    grid.put(p, sign);
 
-    // 
+    if (grid.check(p, sign)) { 
+        std::cout << "\n - - -\n";
+        grid.put(p, ' ');
+        return (sign == 'X') ? -1 : 1;
+    }
+
     if (depth == 0) {
         std::cout << "\n\n DEPTH LIMIT REACHED ! ! !\n";
         return 0;
     }
 
-    grid.put(p, sign);
-
-    if (grid.check(p, sign)) { 
-        std::cout << " - - -\n";
-        grid.put(p, ' ');
-        return (sign == 'X') ? -1 : 1;
-    }
-
-    if (grid.empty == 0) {
+    if (grid.getempty() == 0) {
         std::cout << "\n\n THE BOARD IS FULL ! ! !\n\n";
         grid.put(p, ' ');
         return 0;
     }
+
+
 
     if (sign == 'X') {
         int best = 2;
         for (Pos move : options(grid)) {
 
             int e = evaluate(depth-1, grid, move, 'O');
+            // cout << e << "\n";
 
             if (e == -1) {
                 grid.put(p, ' ');
-                std::cout << " - - -\n";
+                std::cout << "\n - - -\n";
                 return -1;
             }
             best = (best > e) ? e : best;
@@ -72,10 +77,11 @@ int evaluate(int depth, Grid &grid, Pos p, char sign) {
         for (Pos move : options(grid)) {
 
             int e = evaluate(depth-1, grid, move, 'X');
+            // cout << e << "\n";
 
             if (e == 1) {
                 grid.put(p, ' ');
-                std::cout << " - - -\n";
+                std::cout << "\n - - -\n";
                 return 1;
             }
             best = (best < e) ? e : best;
@@ -86,19 +92,32 @@ int evaluate(int depth, Grid &grid, Pos p, char sign) {
 }
 
 Pos find_best(Grid &grid, char sign) {
+
+    int size = grid.getsize();
     int optimal = (sign == 'X') ? -1 : 1;
 
     std::vector<Pos> lead_to_draw;
 
     auto opts = options(grid);
 
-    const int max_depth = grid.getsize()
+
+    // int temp;
+    // int table[] = {6};
+    // if (size > 4) temp = table[size - 5];
+
+    // // assuming each 
+
+    // //  size: 3 4   5 6 7 8 9 10
+    // // value: 9 16  6 
+    // const int max_depth = 4;
+
 
     for (auto move : opts)
     {
-        int e = evaluate(50, grid, move, sign);
+        int e = evaluate(9, grid, move, sign);
 
-        cout << e << " " << move.x << " " << move.y << "\n";
+        cout << "Move: " << move.x << " " << move.y 
+             << " evaluated at " << e << " " << "\n";
 
         if (e == optimal) return move;
         if (e == 0) lead_to_draw.push_back(move);

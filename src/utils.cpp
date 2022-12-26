@@ -1,4 +1,5 @@
 #include <iostream>
+#include <stdexcept>
 #include "utils.hpp"
 
 using namespace std;
@@ -16,16 +17,23 @@ Grid::Grid(int s) {
     empty = size * size;
 }
 
+int Grid::getempty() const {
+    return empty;
+}
+
 char Grid::at(Pos p) const {
     // contents at position (x, y)
     return data[p.y * size + p.x];
 }
 
 void Grid::put(Pos p, char c) {
-    // put char c on position (x, y)
-    data[p.y * size + p.x] = c;
+
+    if (!p.inrange(size)) throw std::out_of_range("Indexing grid out of range");
 
     char before = at(p);
+
+    // put char c on position (x, y)
+    data[p.y * size + p.x] = c;
 
     if ((before == ' ') && (c != ' ')) empty--;
     if ((before != ' ') && (c == ' ')) empty++;

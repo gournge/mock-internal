@@ -15,7 +15,7 @@ class Grid {
         Grid();
         Grid(int s);
 
-        int empty; // the amount of empty cells
+        int getempty() const; // the amount of empty cells
         int getsize() const;
 
         char at(Pos m) const;
@@ -27,5 +27,6 @@ class Grid {
     private:
         std::vector<char> data;
         int size;
+        int empty;
 };
 
