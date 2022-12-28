@@ -12,10 +12,13 @@ void test3();
 void test4();
 void test5();
 void test6();
+void test7();
 
 
 int main()
 {
+
+    test7();
 
     // test1();
 
@@ -29,9 +32,29 @@ int main()
 
     // test5();
 
-    test6();
+    // test6();
 
     return 0;
+}
+
+void test7() {
+    Grid grid(9); 
+
+    grid.put({4, 4}, 'X');
+    // grid.put({2, 3}, 'O');
+    // grid.put({6, 4}, 'X');
+
+    grid.display();
+
+    auto c_i = grid.get_cell_importance();
+    for (int y = 0; y < grid.get_size(); y++)
+    {
+        for (int x = 0; x < grid.get_size(); x++)
+        {
+            cout << c_i[grid.convert({x, y})] << " ";
+        }
+        cout << "\n";
+    }
 }
 
 void test1() {

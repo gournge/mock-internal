@@ -12,7 +12,7 @@ class Game
     private: 
         int size;
         bool with_computer;
-        bool computer_first;
+        bool show_time;
         string name1, name2;
         char sign1 = 'O', sign2 = 'X';
 

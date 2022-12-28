@@ -1,2 +1,2 @@
 make:
-	g++ -o tictactoe -Isrc src/*.cpp test.cpp
+	g++ -o tictactoe -Isrc src/*.cpp test.cpp -std=c++17

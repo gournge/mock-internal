@@ -6,21 +6,6 @@
 using std::cout;
 using std::vector;
 
-vector<Pos> options(const Grid &grid)
-{
-    vector<Pos> opts;
-
-    for (int x = 0; x < grid.getsize(); x++)
-    {
-        for (int y = 0; y < grid.getsize(); y++)
-        {
-            Pos p{x, y};
-            if (grid.at(p) == ' ') opts.push_back(p);
-        }
-    }
-
-    return opts;
-}
 
 // recursive evaluation that assumes both players play optimally.
 // evaluation of putting sign on position p
@@ -40,7 +25,7 @@ int evaluate(int depth, Grid &grid, const Pos p, const char sign) {
         // std::cout << "\n - - -\n";
 
         // grid.display();
-        // cout << "the following move has won!\n";
+        // cout << "the following move has won!\n";`1É
         // cout << p.x << " " << p.y << " : " << sign << "\n";
 
 
@@ -54,7 +39,7 @@ int evaluate(int depth, Grid &grid, const Pos p, const char sign) {
         return 0;
     }
 
-    if (grid.getempty() == 0) {
+    if (grid.get_empty() == 0) {
         // std::cout << "\n\n THE BOARD IS FULL ! ! !\n\n";
 
         // grid.display();
@@ -63,7 +48,8 @@ int evaluate(int depth, Grid &grid, const Pos p, const char sign) {
         return 0;
     }
 
-
+    auto possible_moves = grid.get_cell_importance();
+    
     if (sign == 'X') {
         int best = 2;
         for (Pos move : options(grid)) {
@@ -104,28 +90,24 @@ int evaluate(int depth, Grid &grid, const Pos p, const char sign) {
 
 Pos find_best(Grid &grid, char sign) {
 
-    int size = grid.getsize();
+    int size = grid.get_size();
     int optimal = (sign == 'X') ? -1 : 1;
 
     std::vector<Pos> lead_to_draw;
 
     auto opts = options(grid);
 
+    // max_depth tested on evaluating first move
 
-    // int temp;
-    // int table[] = {6};
-    // if (size > 4) temp = table[size - 5];
-
-    // // assuming each 
-
-    // //  size: 3 4   5 6 7 8 9 10
-    // // value: 9 16  6 
-    // const int max_depth = 4;
+    //  size: 3  4   5 6 7 8 9 10
+    // value: 9  16  4 3 
+    int table[] = {9, 16, 4, 3};
+    const int max_depth = table[size - 3];
 
 
     for (auto move : opts)
     {
-        int e = evaluate(5, grid, move, sign);
+        int e = evaluate(max_depth, grid, move, sign);
 
         // cout << "Move: " << move.x << " " << move.y 
         //      << " evaluated at " << e << " " << "\n";

@@ -1,34 +1,45 @@
 #include <iostream>
 #include <cstdlib>
 #include <time.h>
+#include <chrono>
 #include "game.hpp"
 #include "utils.hpp"
 #include "computer.hpp"
 
-using namespace std;
+// using namespace std;
+
+using std::cout;
+using std::cin;
 
 #define ASK(IN, OUT) {cout << OUT; cin >> IN; cout << "\n";}
 
 Game::Game() {
 
-    do {
-        ASK(size, "Enter the size of the TicTacToe grid: (between 3 and 10) ");
-    } while ((size < 3) || (size > 10));
+    // do {
+    //     ASK(size, "Enter the size of the TicTacToe grid: (between 3 and 10) ");
+    // } while ((size < 3) || (size > 10));
 
-    ASK(with_computer, "Do you want to play with a computer? (0/1) ");
+    // ASK(with_computer, "Do you want to play with a computer? (0/1) ");
 
     if (with_computer) {
-        name1 = "Computer";
-        do {
-        ASK(name2, "What is the player's 1 name? ");
-        } while (name1 == name2);
-    } else {
-        ASK(name1, "What is player's 1 name? ");
-        do {
-        ASK(name2, "What is player's 2 name? "); 
-        } while (name1 == name2);
-    } 
+    // ASK(show_time, "Do you want to show how long a computer? (0/1) ");
+    }
 
+    show_time = true;
+
+    // if (with_computer) {
+    //     name1 = "Computer";
+    //     do {
+    //     ASK(name2, "What is the player's 1 name? ");
+    //     } while (name1 == name2);
+    // } else {
+    //     ASK(name1, "What is player's 1 name? ");
+    //     do {
+    //     ASK(name2, "What is player's 2 name? "); 
+    //     } while (name1 == name2);
+    // } 
+
+    size = 6; name1 = "Computer"; name2 = "Filip";
 
     // if with_computer then name1 is "Computer"
     // and name2 is not
@@ -36,11 +47,11 @@ Game::Game() {
     // randomly changing the order of playing; always name1, name2
     srand((unsigned) time(NULL));
     bool should_swap_order = rand() % 2;
-    if (should_swap_order) swap(name1, name2); // the contents of
+    // if (should_swap_order) swap(name1, name2); // the contents of
 
     srand((unsigned) time(NULL)+1);
     bool should_swap_signs = rand() % 2;
-    if (should_swap_signs) swap(sign1, sign2); // the contents of
+    if (should_swap_signs) std::swap(sign1, sign2); // the contents of
 
     grid = Grid(size);
     // if (with_computer) {
@@ -49,7 +60,7 @@ Game::Game() {
 
     cout << "Player " << name1 << " has sign " << sign1 << ".\n"; 
     cout << "Player " << name2 << " has sign " << sign2 << ".\n"; 
-    cout << endl;
+    cout << "\n";
 
     cout << "Player " << name1 << " begins.\n\n";
     cout << "  -  -  -  -  -  -  -  - \n\n";
@@ -105,7 +116,16 @@ char Game::turn(Grid &grid, const string name, const char sign) {
 }
 
 Pos Game::computer_move(Grid &grid, const char sign) {
+
+    auto start = std::chrono::high_resolution_clock::now();
+
     auto move = find_best(grid, sign);
+
+    auto stop = std::chrono::high_resolution_clock::now();
+    auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(stop-start);
+
+    if (show_time) cout << "Time taken: " << duration.count() << " milliseconds.\n";
+
     grid.put(move, sign);
     cout << "Player Computer moves at:\n";
     cout << move.x << " " << move.y << "\n";
@@ -118,7 +138,7 @@ Pos Game::player_move(Grid &grid, const string name, const char sign) {
     cout << "Player " << name << " moves at:\n";
     cin >> p.x >> p.y;
 
-    if (p.inrange(grid.getsize()) && (grid.at(p)==' ')) {
+    if (p.inrange(grid.get_size()) && (grid.at(p)==' ')) {
         grid.put(p, sign);
     }
     else {
