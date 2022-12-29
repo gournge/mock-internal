@@ -1,4 +1,5 @@
 #include <iostream>
+#include <algorithm>
 #include <cstdlib>
 #include <stdexcept>
 #include "utils.hpp"
@@ -6,53 +7,42 @@
 using std::vector;
 using std::cout;
 
-vector<int> Grid::get_neighbors(const int integer_pos) {
-    vector<int> temp; 
 
-    const int residue = integer_pos % size;
 
-    // refer to this example:
-    // 0|1|2
-    // -----
-    // 3|4|5
-    // -----
-    // 6|7|8
+vector<int> spiral_from_middle_decreasing(const int size) {
 
-    {
-    // true if coords are valid
-    bool top = integer_pos > size-1;
-    bool bottom = integer_pos < size*(size-1);
-    bool right = residue != size-1;
-    bool left = residue != 0;
+    vector<vector<int>> table(size, vector<int>(size, 0));
 
-    if(top) 
-        temp.push_back(integer_pos - size);
+    // order of checking cells
+    // i-th element means position i has importance i
+    vector<int> spiral_converted;
 
-    if(bottom) 
-        temp.push_back(integer_pos + size);
+    int dir_count = 0;
+    int dirsx[4] = {0, 1, 0, -1};
+    int dirsy[4] = {1, 0, -1, 0};
+    int x = 0,   y = 0;
+    int dx = 0, dy = 0;
+    
+    // begins at the top left corner ends in the middle
+    for (int i = 0; i <= size*size-1; i++) { 
+        spiral_converted.push_back(y*size + x);
 
-    if(left) 
-        temp.push_back(integer_pos - 1);
+        table[x][y] = size*size - i;
 
-    if(right) 
-        temp.push_back(integer_pos + 1);
+        dx = dirsx[dir_count%4];
+        dy = dirsy[dir_count%4];
+        x += dx; y += dy;
 
-    if(top && right)
-        temp.push_back(integer_pos - size + 1);
-
-    if(top && left)
-        temp.push_back(integer_pos - size - 1);
-
-    if(bottom && right)
-        temp.push_back(integer_pos + size + 1);
-
-    if(bottom && left)
-        temp.push_back(integer_pos + size - 1);
+        if ( ((x == 0 || x == size-1) && 
+              (y == 0 || y == size-1)) 
+           || (table[x+dx][y+dy]))
+        { dir_count++; }
     }
 
-    return temp;
+    // begins in the middle ends at top left corner
+    std::reverse(spiral_converted.begin(), spiral_converted.end());
+    return spiral_converted;
 }
-
 
 bool Pos::inrange(int size) const {
     return (0 <= x) && (x < size) &&
@@ -61,6 +51,7 @@ bool Pos::inrange(int size) const {
 
 Grid::Grid() { }
 
+// constructor -> computionally expensive work done only once 
 Grid::Grid(int s) {
     size = s;
     data = vector<char>(size * size, ' ');
@@ -77,12 +68,7 @@ Grid::Grid(int s) {
     convert_table = temp;
 
     // highest values in the middle, declines to sides
-    for (auto position_on_board : convert_table) {
-        int sum = abs(2*position_on_board.x - size + 1) + 
-                  abs(2*position_on_board.y - size + 1);
-        cell_importance_base[convert(position_on_board)] = size - sum/2;   
-    }
-    cell_importance = cell_importance_base;
+    cell_check_order = spiral_from_middle_decreasing(size);
 
 }
 
@@ -91,20 +77,46 @@ int Grid::get_empty() const {
 }
 
 Pos Grid::convert(int n) const {
-    if ((n < 0) || (n >= size)) 
-        throw std::out_of_range("Indexing grid out of range");
+    if ((n < 0) || (n >= size*size)) 
+        throw std::out_of_range("Grid::convert; Indexing grid out of range : int type indexing");
     return convert_table[n];
 }
 
 int Grid::convert(Pos p) const {
     if (!p.inrange(size)) 
-        throw std::out_of_range("Indexing grid out of range");
+        throw std::out_of_range("Grid::convert; Indexing grid out of range : Pos type indexing");
     return p.y * size + p.x;
 }
 
 char Grid::at(Pos p) const {
+    if (!p.inrange(size)) 
+        throw std::out_of_range("Grid::at; Indexing grid out of range : Pos type indexing");
     // contents at position (x, y)
     return data[convert(p)];
+}
+
+char Grid::at(int n) const {
+    if ((n < 0) || (n >= size*size)) 
+        throw std::out_of_range("Grid::at; Indexing grid out of range : int type indexing");
+    return data[n];
+}
+
+void Grid::put(int p, char c) {
+
+    char before = at(p);
+
+    // if the action fills the position 
+    if ((before == ' ') && (c != ' ')) {
+        empty--;
+    }
+
+    // if the action empties the position 
+    if ((before != ' ') && (c == ' ')) {
+        empty++;
+    }
+
+    // put char c on position p
+    data[p] = c;
 }
 
 void Grid::put(Pos p, char c) {
@@ -113,16 +125,13 @@ void Grid::put(Pos p, char c) {
 
     char before = at(p);
 
-    auto neighbors = get_neighbors(integer_pos);
+    // if the action fills the position 
     if ((before == ' ') && (c != ' ')) {
-        cell_importance.erase(integer_pos);
-        for (auto cell : neighbors)
-            cell_importance[cell] += size;
         empty--;
     }
+
+    // if the action empties the position 
     if ((before != ' ') && (c == ' ')) {
-        cell_importance[integer_pos] = cell_importance_base[integer_pos];
-        cell_importance[integer_pos] += size * neighbors.size();
         empty++;
     }
 
@@ -134,8 +143,8 @@ int Grid::get_size() const {
     return size;
 }
 
-std::map<int, int> Grid::get_cell_importance() {
-    return cell_importance;
+std::vector<int> Grid::get_cell_check_order() {
+    return cell_check_order;
 }
 
 void Grid::display() const

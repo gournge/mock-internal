@@ -22,7 +22,7 @@ Game::Game() {
     // ASK(with_computer, "Do you want to play with a computer? (0/1) ");
 
     if (with_computer) {
-    // ASK(show_time, "Do you want to show how long a computer? (0/1) ");
+    // ASK(show_time, "Do you want to show how long does the computer move? (0/1) ");
     }
 
     show_time = true;
@@ -39,7 +39,7 @@ Game::Game() {
     //     } while (name1 == name2);
     // } 
 
-    size = 6; name1 = "Computer"; name2 = "Filip";
+    size = 5; name1 = "Computer"; name2 = "Filip";
 
     // if with_computer then name1 is "Computer"
     // and name2 is not
@@ -54,9 +54,6 @@ Game::Game() {
     if (should_swap_signs) std::swap(sign1, sign2); // the contents of
 
     grid = Grid(size);
-    // if (with_computer) {
-
-    // }
 
     cout << "Player " << name1 << " has sign " << sign1 << ".\n"; 
     cout << "Player " << name2 << " has sign " << sign2 << ".\n"; 
@@ -108,7 +105,7 @@ char Game::turn(Grid &grid, const string name, const char sign) {
     if (grid.check(m, sign)) {
         who_won = sign;
     }
-    if (options(grid).empty()) {
+    if (grid.get_empty() == 0) {
         who_won = 'F';
     }
 
@@ -119,7 +116,7 @@ Pos Game::computer_move(Grid &grid, const char sign) {
 
     auto start = std::chrono::high_resolution_clock::now();
 
-    auto move = find_best(grid, sign);
+    Pos move = find_best(grid, sign);
 
     auto stop = std::chrono::high_resolution_clock::now();
     auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(stop-start);

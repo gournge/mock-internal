@@ -3,6 +3,8 @@
 #include <vector>
 #include <map>
 
+std::vector<int> spiral_from_middle_decreasing(const int size);
+
 struct Pos {
     int x, y;
 
@@ -30,13 +32,14 @@ class Grid {
         int convert(Pos) const;
 
         char at(Pos m) const;
+        char at(int m) const;
         void put(Pos m, char c);
+        void put(int m, char c);
 
         void display() const;
         bool check(Pos m, char sign) const;
 
-        std::vector<int> get_neighbors(const int p);
-        std::map<int, int> get_cell_importance();        
+        std::vector<int> get_cell_check_order();        
 
     private:
         std::vector<char> data;
@@ -44,12 +47,9 @@ class Grid {
         int empty;
 
         std::vector<Pos> convert_table;
- 
-        // keys refer to converted positions. 
-        // when a sign is put its neigbors get incremented by size since initially 
-        // lowest value is 1 and highest is size-1.
-        // in that way said neighbors get pushed to the front
-        std::map<int, int> cell_importance;
-        std::map<int, int> cell_importance_base;
+
+        // describes importance of the cells
+        // first the cells from the middle are checked etc.
+        std::vector<int> cell_check_order;
 };
 

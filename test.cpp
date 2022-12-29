@@ -18,7 +18,10 @@ void test7();
 int main()
 {
 
-    test7();
+    // Grid grid(5);
+    // cout << grid.convert();
+
+    // test7();
 
     // test1();
 
@@ -38,23 +41,25 @@ int main()
 }
 
 void test7() {
-    Grid grid(9); 
+    Grid grid(5); 
 
-    grid.put({4, 4}, 'X');
+    grid.put({2, 2}, 'X');
     // grid.put({2, 3}, 'O');
     // grid.put({6, 4}, 'X');
 
     grid.display();
 
-    auto c_i = grid.get_cell_importance();
-    for (int y = 0; y < grid.get_size(); y++)
-    {
-        for (int x = 0; x < grid.get_size(); x++)
-        {
-            cout << c_i[grid.convert({x, y})] << " ";
-        }
-        cout << "\n";
-    }
+    // auto check_order = grid.get_cell_check_order();
+    // for (int y = 0; y<grid.get_size(); y++) {
+    //     for (int x = 0; x<grid.get_size(); x++) {
+    //         cout << check_order[grid.convert({x, y})] << ' ';
+    //     }
+    //     cout << "\n";
+    // }
+
+    // auto spiral = spiral_from_middle_decreasing(grid.get_size());
+    // for (auto el : spiral)
+    //     cout << el << " ";
 }
 
 void test1() {
@@ -276,7 +281,7 @@ void test6() {
 
     grid.display();
 
-    cout << evaluate(5, grid, {2, 3}, 'O') << "\n";
+    cout << evaluate(5, grid, grid.convert({2, 3}), 'O') << "\n";
 
     auto b = find_best(grid, 'O');
     cout << b.x << " " << b.y << "\n";
