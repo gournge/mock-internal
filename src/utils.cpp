@@ -8,8 +8,9 @@ using std::vector;
 using std::cout;
 
 
-
 vector<int> spiral_from_middle_decreasing(const int size) {
+
+    if (size == 3) return {4, 3, 6, 7, 8, 5, 2, 1, 0};
 
     vector<vector<int>> table(size, vector<int>(size, 0));
 
@@ -57,6 +58,7 @@ Grid::Grid(int s) {
     data = vector<char>(size * size, ' ');
     empty = size * size;
 
+
     vector<Pos> temp;
     for (int y = 0; y < size; y++)
     {
@@ -69,7 +71,6 @@ Grid::Grid(int s) {
 
     // highest values in the middle, declines to sides
     cell_check_order = spiral_from_middle_decreasing(size);
-
 }
 
 int Grid::get_empty() const {
@@ -110,7 +111,7 @@ void Grid::put(int p, char c) {
         empty--;
     }
 
-    // if the action empties the position 
+    // if the action empties the position  
     if ((before != ' ') && (c == ' ')) {
         empty++;
     }
@@ -166,7 +167,7 @@ void Grid::display() const
     {
         cout << at({x, size - 1}) << '|';
     }
-    cout << at({size - 1, size - 1}) << "\n" << std::endl;
+    cout << at({size - 1, size - 1}) << "\n";
 }
 
 bool Grid::check(Pos p, char sign) const 

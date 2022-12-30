@@ -18,7 +18,12 @@ void test7();
 int main()
 {
 
-    // Grid grid(5);
+    Grid grid(5);
+    grid.put({2, 2}, 'X');
+    grid.display();
+    grid.put({2, 2}, ' ');
+    grid.display();
+
     // cout << grid.convert();
 
     // test7();

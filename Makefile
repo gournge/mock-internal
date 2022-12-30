@@ -1,2 +1,2 @@
 make:
-	g++ -o tictactoe -Isrc src/*.cpp find_max_depth.cpp -std=c++17
+	g++ -o tictactoe -Isrc src/*.cpp main.cpp -std=c++17

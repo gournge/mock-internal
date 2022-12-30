@@ -1,9 +1,16 @@
+#include <iostream>
 #include "game.hpp"
 
 int main() {
 
-    Game game;
-    game.play();
+    bool again;
+    do {
+        Game game;
+        game.play();
+        
+        std::cout << "Do you want to play again? (0/1) ";
+        std::cin >> again;
+    } while(again);
 
     return 0;
 }

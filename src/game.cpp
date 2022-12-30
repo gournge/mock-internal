@@ -15,31 +15,29 @@ using std::cin;
 
 Game::Game() {
 
-    // do {
-    //     ASK(size, "Enter the size of the TicTacToe grid: (between 3 and 10) ");
-    // } while ((size < 3) || (size > 10));
+    do {
+        ASK(size, "Enter the size of the TicTacToe grid: (between 3 and 10) ");
+    } while ((size < 3) || (size > 10));
 
-    // ASK(with_computer, "Do you want to play with a computer? (0/1) ");
+    ASK(with_computer, "Do you want to play with a computer? (0/1) ");
 
     if (with_computer) {
-    // ASK(show_time, "Do you want to show how long does the computer move? (0/1) ");
+    ASK(show_time, "Do you want to show how long does the computer move? (0/1) ");
     }
 
     show_time = true;
 
-    // if (with_computer) {
-    //     name1 = "Computer";
-    //     do {
-    //     ASK(name2, "What is the player's 1 name? ");
-    //     } while (name1 == name2);
-    // } else {
-    //     ASK(name1, "What is player's 1 name? ");
-    //     do {
-    //     ASK(name2, "What is player's 2 name? "); 
-    //     } while (name1 == name2);
-    // } 
-
-    size = 5; name1 = "Computer"; name2 = "Filip";
+    if (with_computer) {
+        name1 = "Computer";
+        do {
+        ASK(name2, "What is the player's 1 name? ");
+        } while (name1 == name2);
+    } else {
+        ASK(name1, "What is player's 1 name? ");
+        do {
+        ASK(name2, "What is player's 2 name? "); 
+        } while (name1 == name2);
+    } 
 
     // if with_computer then name1 is "Computer"
     // and name2 is not
@@ -62,8 +60,6 @@ Game::Game() {
     cout << "Player " << name1 << " begins.\n\n";
     cout << "  -  -  -  -  -  -  -  - \n\n";
 
-    grid.display();
-
 }
 
 void Game::play() {
@@ -84,7 +80,7 @@ void Game::play() {
     }
 
     string winner = (who_won == sign1) ? name1 : name2;
-    cout << "Congratulations!\nPlayer " << winner << " won!";
+    cout << "Congratulations!\nPlayer " << winner << " won!\n";
 
     return;
 }
@@ -96,12 +92,13 @@ char Game::turn(Grid &grid, const string name, const char sign) {
     char who_won = ' '; 
     Pos m;
 
+    grid.display();
+
     if (name == "Computer")
         m = computer_move(grid, sign);
     else
         m = player_move(grid, name, sign);
     
-    grid.display();
     if (grid.check(m, sign)) {
         who_won = sign;
     }

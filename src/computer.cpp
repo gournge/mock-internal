@@ -25,8 +25,8 @@ int evaluate(int depth, Grid &grid, const int pos, const char sign) {
         // std::cout << "\n - - -\n";
 
         // grid.display();
-        // cout << "the following move has won!\n";`1É
-        // cout << p.x << " " << p.y << " : " << sign << "\n";
+        // cout << "the following move has won!\n";
+        // cout << pos << " : " << sign << "\n";
 
 
         grid.put(pos, ' ');
@@ -35,6 +35,8 @@ int evaluate(int depth, Grid &grid, const int pos, const char sign) {
 
     if (depth == 0) {
         // std::cout << "\n\n DEPTH LIMIT REACHED ! ! !\n";
+        // cout << "\n";
+        // grid.display();
         grid.put(pos, ' ');
         return 0;
     }
@@ -53,6 +55,8 @@ int evaluate(int depth, Grid &grid, const int pos, const char sign) {
     if (sign == 'X') {
         int best = 2;
         for (int move : possible_moves) {
+            // if the cell is full
+            if (grid.at(move) != ' ') continue;
 
             int e = evaluate(depth-1, grid, move, 'O');
             // cout << e << "\n";
@@ -60,8 +64,8 @@ int evaluate(int depth, Grid &grid, const int pos, const char sign) {
             // if there is a chance for the opposite player
             // to achieve a certain win, assume he will go for it 
             if (e == 1) {
-                grid.put(pos, ' ');
                 // std::cout << "\n - - -\n";
+                grid.put(pos, ' ');
                 return 1;
             }
             best = (best > e) ? e : best;
@@ -72,13 +76,15 @@ int evaluate(int depth, Grid &grid, const int pos, const char sign) {
     } else {
         int best = -2;
         for (int move : possible_moves) {
+            // if the cell is full
+            if (grid.at(move) != ' ') continue;
 
             int e = evaluate(depth-1, grid, move, 'X');
             // cout << e << "\n";
 
             if (e == -1) {
-                grid.put(pos, ' ');
                 // std::cout << "\n - - -\n";
+                grid.put(pos, ' ');
                 return -1;
             }
             best = (best < e) ? e : best;
@@ -99,26 +105,39 @@ Pos find_best(Grid &grid, char sign, int depth) {
 
     if (depth == -1) {
         //  size: 3  4   5 6 7 8 9 10
-        // value: 9  16  4 3 
-        int table[] = {9, 16, 4, 3, 3, 3};
+        // value: 9  16  4 3 3 3
+        vector<int> table = {9, 16, 4, 3, 3, 3, 1, 1};
         max_depth = table[size - 3];
     } else {
         max_depth = depth;
     }
     
+    // if there is less than 60% of blank space, increase search depth
+    if (grid.get_empty() < size*size * 3/5) max_depth += 3; 
+
     std::vector<Pos> lead_to_draw;
     auto possible_moves = grid.get_cell_check_order();
     for (auto move : possible_moves)
     {
-        int e = evaluate(max_depth, grid, move, sign);
+        // if the cell is full
+        if (grid.at(move) != ' ') continue;
 
         Pos m = grid.convert(move);
+
+        // if the cell is outside the quarter board skip it
+        // in the beginning the board is symmetric
+        bool empty_board = grid.get_empty() == size*size;
+        int quarter_board = (size % 2 == 0) ? size/2 : size/2 + 1; 
+        bool outside_of_quarter = !(m.inrange(quarter_board));
+        if (empty_board && outside_of_quarter) continue;
+     
+        int e = evaluate(max_depth, grid, move, sign);
 
         // cout << "Move: " << m.x << " " << m.y 
         //      << " evaluated at " << e << " " << "\n";
 
-        if (e == optimal) return grid.convert(move);
-        if (e == 0) lead_to_draw.push_back(grid.convert(move));
+        if (e == optimal) return m;
+        if (e == 0) lead_to_draw.push_back(m);
     }
 
     // if no optimal move is found, return a random one
