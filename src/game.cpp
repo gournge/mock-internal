@@ -25,8 +25,6 @@ Game::Game() {
     ASK(show_time, "Do you want to show how long does the computer move? (0/1) ");
     }
 
-    show_time = true;
-
     if (with_computer) {
         name1 = "Computer";
         do {
@@ -45,7 +43,7 @@ Game::Game() {
     // randomly changing the order of playing; always name1, name2
     srand((unsigned) time(NULL));
     bool should_swap_order = rand() % 2;
-    // if (should_swap_order) swap(name1, name2); // the contents of
+    if (should_swap_order) swap(name1, name2); // the contents of
 
     srand((unsigned) time(NULL)+1);
     bool should_swap_signs = rand() % 2;
@@ -66,10 +64,10 @@ void Game::play() {
 
     char who_won = ' ';
     while (true) {
-        who_won = turn(grid, name1, sign1);
+        who_won = turn(name1, sign1);
         if (who_won != ' ') break;
 
-        who_won = turn(grid, name2, sign2);
+        who_won = turn(name2, sign2);
         if (who_won != ' ') break;
     }
 
@@ -88,16 +86,16 @@ void Game::play() {
 // 'X' or 'O' if one of them won
 // 'F' if the board is full with no wins -> draw
 // ' ' game should continue  
-char Game::turn(Grid &grid, const string name, const char sign) {
+char Game::turn(const string name, const char sign) {
     char who_won = ' '; 
     Pos m;
 
     grid.display();
 
     if (name == "Computer")
-        m = computer_move(grid, sign);
+        m = computer_move(sign);
     else
-        m = player_move(grid, name, sign);
+        m = player_move(name, sign);
     
     if (grid.check(m, sign)) {
         who_won = sign;
@@ -109,7 +107,7 @@ char Game::turn(Grid &grid, const string name, const char sign) {
     return who_won;
 }
 
-Pos Game::computer_move(Grid &grid, const char sign) {
+Pos Game::computer_move(const char sign) {
 
     auto start = std::chrono::high_resolution_clock::now();
 
@@ -126,7 +124,7 @@ Pos Game::computer_move(Grid &grid, const char sign) {
     return move;
 }
 
-Pos Game::player_move(Grid &grid, const string name, const char sign) {
+Pos Game::player_move(const string name, const char sign) {
 
     Pos p;
     cout << "Player " << name << " moves at:\n";

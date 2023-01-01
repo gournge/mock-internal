@@ -50,7 +50,7 @@ int evaluate(int depth, Grid &grid, const int pos, const char sign) {
         return 0;
     }
 
-    auto possible_moves = grid.get_cell_check_order();
+    const auto& possible_moves = grid.get_cell_check_order();
     
     if (sign == 'X') {
         int best = 2;
@@ -105,15 +105,15 @@ Pos find_best(Grid &grid, char sign, int depth) {
 
     if (depth == -1) {
         //  size: 3  4   5 6 7 8 9 10
-        // value: 9  16  4 3 3 3
-        vector<int> table = {9, 16, 4, 3, 3, 3, 1, 1};
+        // value: 9  16  
+        vector<int> table = {9, 16, 4, 3, 3, 3, 2, 2};
         max_depth = table[size - 3];
     } else {
         max_depth = depth;
     }
     
     // if there is less than 60% of blank space, increase search depth
-    if (grid.get_empty() < size*size * 3/5) max_depth += 3; 
+    if (grid.get_empty() < (size*size * 3/5)) max_depth += 3; 
 
     std::vector<Pos> lead_to_draw;
     auto possible_moves = grid.get_cell_check_order();
@@ -132,9 +132,6 @@ Pos find_best(Grid &grid, char sign, int depth) {
         if (empty_board && outside_of_quarter) continue;
      
         int e = evaluate(max_depth, grid, move, sign);
-
-        // cout << "Move: " << m.x << " " << m.y 
-        //      << " evaluated at " << e << " " << "\n";
 
         if (e == optimal) return m;
         if (e == 0) lead_to_draw.push_back(m);

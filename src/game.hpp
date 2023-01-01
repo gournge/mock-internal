@@ -18,8 +18,9 @@ class Game
 
         Grid grid;
     
-        char turn(Grid &grid, const string name, const char sign);
-        Pos player_move(Grid &grid, const string name, const char sign);
-        Pos computer_move(Grid &grid, const char sign);
+        char turn(const string name, const char sign);
+        Pos player_move(const string name, const char sign);
+        Pos computer_move(const char sign);
 
 };
+

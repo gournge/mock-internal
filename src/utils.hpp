@@ -52,4 +52,3 @@ class Grid {
         // first the cells from the middle are checked etc.
         std::vector<int> cell_check_order;
 };
-
