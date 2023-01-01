@@ -51,6 +51,8 @@ Game::Game() {
 
     grid = Grid(size);
 
+    cout << "To enter coordinates of your move, first type in the column and then the row number.\n\n";
+
     cout << "Player " << name1 << " has sign " << sign1 << ".\n"; 
     cout << "Player " << name2 << " has sign " << sign2 << ".\n"; 
     cout << "\n";

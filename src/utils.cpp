@@ -174,6 +174,7 @@ void Grid::display() const
         }
         cout << '\n';
     }
+    cout << size-1 << " ";
     for (int x = 0; x < size - 1; x++)
     {
         cout << at({x, size - 1}) << '|';
