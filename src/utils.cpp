@@ -151,6 +151,7 @@ std::vector<int> Grid::get_cell_check_order() {
 void Grid::display() const
 {
 
+    cout << "  ";
     for (int x = 0; x < size; x++)
     {
         cout << x << " ";
@@ -165,6 +166,8 @@ void Grid::display() const
             cout << at({x, y}) << '|';
         }
         cout << at({size - 1, y}) << '\n';
+        
+        cout << "  "; 
         for (int x = 0; x < 2 * size - 1; x++)
         {
             cout << '-';
