@@ -53,6 +53,7 @@ int evaluate(int depth, Grid &grid, const int pos, const char sign) {
     const auto& possible_moves = grid.get_cell_check_order();
     
     if (sign == 'X') {
+        // every evaluation is now better than this value
         int best = 2;
         for (int move : possible_moves) {
             // if the cell is full
@@ -68,7 +69,8 @@ int evaluate(int depth, Grid &grid, const int pos, const char sign) {
                 grid.put(pos, ' ');
                 return 1;
             }
-            best = (best > e) ? e : best;
+            // pick minimizing move
+            if (best > e) best = e;
         }
         grid.put(pos, ' ');
         return best;
@@ -87,7 +89,7 @@ int evaluate(int depth, Grid &grid, const int pos, const char sign) {
                 grid.put(pos, ' ');
                 return -1;
             }
-            best = (best < e) ? e : best;
+            if (best < e) best = e;
         }
         grid.put(pos, ' ');
         return best;
