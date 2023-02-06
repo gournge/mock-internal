@@ -3,7 +3,7 @@
 
 int main() {
 
-    bool again;
+    bool again = false;
     do {
         Game game;
         game.play();

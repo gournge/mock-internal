@@ -16,8 +16,9 @@ int evaluate(int depth, Grid &grid, const int pos, const char sign) {
 
     // cout << "\n\n";
     // grid.display();
+    // const Pos p = grid.convert(pos);
     // cout << p.x << " " << p.y << " : " << sign << "\n";
-    // cout << "empty: " << grid.getempty() << "\n";
+    // cout << "empty: " << grid.get_empty() << "\n";
  
     grid.put(pos, sign);
 
@@ -53,8 +54,10 @@ int evaluate(int depth, Grid &grid, const int pos, const char sign) {
     const auto& possible_moves = grid.get_cell_check_order();
     
     if (sign == 'X') {
+        // X position has been put. now it is O's turn.
+
         // every evaluation is now better than this value
-        int best = 2;
+        int best = -2;
         for (int move : possible_moves) {
             // if the cell is full
             if (grid.at(move) != ' ') continue;
@@ -67,16 +70,19 @@ int evaluate(int depth, Grid &grid, const int pos, const char sign) {
             if (e == 1) {
                 // std::cout << "\n - - -\n";
                 grid.put(pos, ' ');
+                // cout << "evaluation: " << 1 << "\n"; 
+
                 return 1;
             }
-            // pick minimizing move
-            if (best > e) best = e;
+            // pick maximizing move
+            if (best < e) best = e;
         }
         grid.put(pos, ' ');
+        // cout << "evaluation: " << best << "\n"; 
         return best;
 
     } else {
-        int best = -2;
+        int best = 2;
         for (int move : possible_moves) {
             // if the cell is full
             if (grid.at(move) != ' ') continue;
@@ -87,11 +93,13 @@ int evaluate(int depth, Grid &grid, const int pos, const char sign) {
             if (e == -1) {
                 // std::cout << "\n - - -\n";
                 grid.put(pos, ' ');
+                // cout << "evaluation: " << -1 << "\n"; 
                 return -1;
             }
-            if (best < e) best = e;
+            if (best > e) best = e;
         }
         grid.put(pos, ' ');
+        // cout << "evaluation: " << best << "\n"; 
         return best;
     }
 }
@@ -105,10 +113,34 @@ Pos find_best(Grid &grid, char sign, int depth) {
     // max_depth tested on evaluating first move
     int max_depth;
 
+    if (grid.get_empty() >= size*size-1) {
+        switch (size)
+        {
+        case 10:
+            if (grid.at({4, 4}) == ' ') return {4, 4};
+            else return {5, 5};
+
+        case 9:
+            if (grid.at({4, 4}) == ' ') return {4, 4};
+            else return {5, 5};
+
+        case 8:
+            if (grid.at({4, 4}) == ' ') return {4, 4};
+            else return {3, 3};
+
+        case 7:
+            if (grid.at({4, 4}) == ' ') return {4, 4};
+            else return {3, 3};
+
+        default:
+            break;
+        }
+    }
+
     if (depth == -1) {
         //  size: 3  4   5 6 7 8 9 10
         // value: 9  16  
-        vector<int> table = {9, 16, 4, 3, 3, 3, 2, 2};
+        vector<int> table = {9, 16, 4, 4, 4, 4, 4, 3};
         max_depth = table[size - 3];
     } else {
         max_depth = depth;

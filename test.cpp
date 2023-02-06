@@ -18,41 +18,36 @@ void test7();
 int main()
 {
 
-    Grid grid(5);
-    grid.put({2, 2}, 'X');
-    grid.display();
-    grid.put({2, 2}, ' ');
-    grid.display();
-
-    // cout << grid.convert();
-
     // test7();
 
+    // works.
     // test1();
 
+    // works. 
     // test1andhalf();
 
+    // works.
     // test2();
 
-    // test3();
+    test3();
 
-    // test4();
+    test4();
 
-    // test5();
+    test5();
 
-    // test6();
+    test6();
 
     return 0;
 }
 
 void test7() {
-    Grid grid(5); 
+    // Grid grid(5); 
 
-    grid.put({2, 2}, 'X');
-    // grid.put({2, 3}, 'O');
-    // grid.put({6, 4}, 'X');
+    // grid.put({2, 2}, 'X');
+    // // grid.put({2, 3}, 'O');
+    // // grid.put({6, 4}, 'X');
 
-    grid.display();
+    // grid.display();
 
     // auto check_order = grid.get_cell_check_order();
     // for (int y = 0; y<grid.get_size(); y++) {
@@ -99,6 +94,8 @@ void test1() {
     std::cout << b.x << " " << b.y << "\n";
 
     // cout << grid.check(p, 'X');
+    // cout << grid.check({4, 0}, 'X');
+
 }
 
 void test1andhalf() {
@@ -123,6 +120,9 @@ void test1andhalf() {
     // grid.display();
 
     auto b = find_best(grid, 'X');
+
+    cout << " - - -\n";
+
     std::cout << b.x << " " << b.y << "\n";
 
 }
@@ -146,11 +146,6 @@ void test2() {
     grid.put({0, 1}, 'O');
 
     grid.display();
-
-    // cout << evaluate(9, grid, {1, 1}, 'O') << "\n";
-    // cout << evaluate(9, grid, {2, 0}, 'X') << "\n";
-
-    // cout << evaluate(9, grid, {1, 0}, 'X') << "\n";
 
     auto b = find_best(grid, 'X');
     std::cout << b.x << " " << b.y << "\n";
@@ -285,8 +280,6 @@ void test6() {
     grid.put({2, 2}, 'X');
 
     grid.display();
-
-    cout << evaluate(5, grid, grid.convert({2, 3}), 'O') << "\n";
 
     auto b = find_best(grid, 'O');
     cout << b.x << " " << b.y << "\n";
