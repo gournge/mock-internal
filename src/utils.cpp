@@ -7,7 +7,6 @@
 using std::vector;
 using std::cout;
 
-
 vector<int> spiral_from_middle_decreasing(const int size) {
 
     if (size == 3) return {4, 3, 6, 7, 8, 5, 2, 1, 0};
@@ -50,6 +49,11 @@ bool Pos::inrange(int size) const {
            (0 <= y) && (y < size);
 }
 
+bool operator==(const Pos& p1, const Pos& p2) {
+    return (p1.x == p2.x) && (p1.y == p2.y);
+}
+
+
 Grid::Grid() { }
 
 // constructor -> computionally expensive work done only once 
@@ -90,8 +94,10 @@ int Grid::convert(Pos p) const {
 }
 
 char Grid::at(Pos p) const {
-    if (!p.inrange(size)) 
+    if (!p.inrange(size)) {
+        cout << "what?\n";
         throw std::out_of_range("Grid::at; Indexing grid out of range : Pos type indexing");
+    }
     // contents at position (x, y)
     return data[convert(p)];
 }

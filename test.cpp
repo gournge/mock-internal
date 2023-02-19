@@ -13,6 +13,8 @@ void test4();
 void test5();
 void test6();
 void test7();
+void test8();
+
 
 
 int main()
@@ -37,7 +39,24 @@ int main()
 
     test6();
 
+    test8();
+
     return 0;
+}
+
+void test8() {
+    Grid grid(8);
+
+    grid.put({5, 2}, 'X');
+    grid.put({3, 3}, 'X');
+    grid.put({2, 4}, 'X');
+    grid.put({5, 4}, 'X');
+
+    grid.put({4, 2}, 'O');
+    grid.put({4, 2}, 'O');
+    grid.put({4, 2}, 'O');
+
+
 }
 
 void test7() {

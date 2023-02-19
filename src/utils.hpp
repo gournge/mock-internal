@@ -13,6 +13,8 @@ struct Pos {
     bool inrange(int size) const; 
 };
 
+bool operator==(const Pos&, const Pos&);
+
 class Grid {
     public:
         Grid();

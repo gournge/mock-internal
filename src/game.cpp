@@ -10,19 +10,43 @@
 
 using std::cout;
 using std::cin;
+using std::string;
 
 #define ASK(IN, OUT) {cout << OUT; cin >> IN; cout << "\n";}
 
 Game::Game() {
 
+    // game size
+    string str_size;
+    bool valid;
     do {
-        ASK(size, "Enter the size of the TicTacToe grid: (between 3 and 10) ");
-    } while ((size < 3) || (size > 10));
 
-    ASK(with_computer, "Do you want to play with a computer? (0/1) ");
+        ASK(str_size, "Enter the size of the TicTacToe grid: (between 3 and 10) ");
+        
+        valid = (str_size == "3") || (str_size == "4") || 
+                (str_size == "5") || (str_size == "6") || 
+                (str_size == "7") || (str_size == "8") ||
+                (str_size == "9") || (str_size == "10");
 
+    } while (!valid);
+    size = std::stoi(str_size);
+
+    // whether to play with a computer
+    string str_with_computer;
+    do {
+        ASK(str_with_computer, "Do you want to play with a computer? (0/1) ");
+    } while ((str_with_computer != "0") && (str_with_computer != "1"));
+
+    with_computer = (str_with_computer == "0") ? false : true;
+
+    // whether to time the computer
     if (with_computer) {
-    ASK(show_time, "Do you want to show how long does the computer move? (0/1) ");
+        string str_show_time;
+        do {
+            ASK(str_show_time, "Do you want to show how long does the computer move? (0/1) ");
+        } while ((str_show_time != "0") && (str_show_time != "1"));
+
+        show_time = (str_show_time == "0") ? false : true;
     }
 
     if (with_computer) {
@@ -45,7 +69,7 @@ Game::Game() {
     bool should_swap_order = rand() % 2;
     if (should_swap_order) swap(name1, name2); // the contents of
 
-    srand((unsigned) time(NULL)+1);
+    srand((unsigned) time(NULL)+379);
     bool should_swap_signs = rand() % 2;
     if (should_swap_signs) std::swap(sign1, sign2); // the contents of
 
@@ -99,11 +123,16 @@ char Game::turn(const string name, const char sign) {
     else
         m = player_move(name, sign);
     
+    // if it is valid
+    if (!(m == Pos{-1, -1})) {
+
     if (grid.check(m, sign)) {
         who_won = sign;
     }
     if (grid.get_empty() == 0) {
         who_won = 'F';
+    }
+
     }
 
     return who_won;
@@ -126,11 +155,33 @@ Pos Game::computer_move(const char sign) {
     return move;
 }
 
+// returns Pos{-1, -1} when it is invalid
 Pos Game::player_move(const string name, const char sign) {
 
-    Pos p;
+    bool x_valid, y_valid;
+    string x, y;
     cout << "Player " << name << " moves at:\n";
-    cin >> p.x >> p.y;
+    cin >> x >> y;
+
+    x_valid = (x == "1") || (x == "2") ||
+              (x == "3") || (x == "4") || 
+              (x == "5") || (x == "6") || 
+              (x == "7") || (x == "8") ||
+              (x == "9") || (x == "0");
+
+    y_valid = (y == "1") || (y == "2") ||
+              (y == "3") || (y == "4") || 
+              (y == "5") || (y == "6") || 
+              (y == "7") || (y == "8") ||
+              (y == "9") || (y == "0");
+
+    bool input_valid = x_valid && y_valid;
+
+    if (!input_valid) { 
+        cout << "Invalid move. You lose your turn!\n";
+        return {-1, -1};
+    }
+    Pos p{std::stoi(x), std::stoi(y)};
 
     if (p.inrange(grid.get_size()) && (grid.at(p)==' ')) {
         grid.put(p, sign);
@@ -141,3 +192,6 @@ Pos Game::player_move(const string name, const char sign) {
 
     return p;
 }
+
+
+
