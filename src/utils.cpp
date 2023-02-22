@@ -193,6 +193,9 @@ bool Grid::check(Pos p, char sign) const
     int to_win = (size > 4) ? 5 : 3;
     int init_val = (at(p) == ' ') ? 1 : 0;
 
+    // too little to win
+    if (get_empty() < 2*(to_win-1)) return false;
+
     // perpendicular lines check
     for (int i = 0; i < to_win; i++)
     {

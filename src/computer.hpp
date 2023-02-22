@@ -6,3 +6,5 @@ Pos find_best(Grid &grid, char sign, int depth = -1);
 
 std::vector<Pos> find_promising(Grid &grid, char sign);
 std::vector<Pos> find_neighbors(Grid &grid, char sign, Pos cell);
+
+int multiply_down(int, int);

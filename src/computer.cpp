@@ -1,10 +1,12 @@
 #include <iostream>
 #include <cstdlib>
 #include <time.h>
+#include <algorithm>
 #include "computer.hpp"
 
 using std::cout;
 using std::vector;
+
 
 // recursive evaluation that assumes both players play optimally.
 // evaluation of putting sign on position p
@@ -60,7 +62,7 @@ int evaluate(int depth, Grid &grid, const int pos, const char sign, int& count) 
             if (best < e) best = e;
         }
         grid.put(pos, ' ');
-        // cout << "evaluation: " << best << "\n"; 
+        count++;
         return best;
 
     } else {
@@ -82,6 +84,7 @@ int evaluate(int depth, Grid &grid, const int pos, const char sign, int& count) 
         }
         grid.put(pos, ' ');
         // cout << "evaluation: " << best << "\n"; 
+        count++;
         return best;
     }
 }
@@ -91,9 +94,6 @@ Pos find_best(Grid &grid, char sign, int depth) {
 
     int size = grid.get_size();
     int optimal = (sign == 'X') ? -1 : 1;
-
-    // max_depth tested on evaluating first move
-    int max_depth;
 
     if (grid.get_empty() >= size*size-1) {
         switch (size)
@@ -114,22 +114,40 @@ Pos find_best(Grid &grid, char sign, int depth) {
             if (grid.at({4, 4}) == ' ') return {4, 4};
             else return {3, 3};
 
+        case 3:
+            if (grid.at({0, 0}) == ' ') return {0, 0};
+            else return {2, 2};
+
         default:
             break;
         }
     }
 
-    if (depth == -1) {
-        //  size: 3  4   5 6 7 8 9 10
-        // value: 9  16  
-        vector<int> table = {9, 16, 3, 3, 3, 2, 2, 2};
-        max_depth = table[size - 3];
-    } else {
-        max_depth = depth;
-    }
+    // if (depth == -1) {
+    //     //  size: 3  4   5 6 7 8 9 10
+    //     // value: 9  16  
+    //     vector<int> table = {9, 16, 3, 3, 3, 2, 2, 2};
+    //     max_depth = table[size - 3];
+    // } else {
+    //     max_depth = depth;
+    // }
     
-    // if there is less than 60% of blank space, increase search depth
-    if (grid.get_empty() < (size*size * 3/5)) max_depth += 1; 
+    // // if there is less than 60% of blank space, increase search depth
+    // if (grid.get_empty() < (size*size * 3/5)) max_depth += 1; 
+
+    // max_depth tested on evaluating first move
+    int max_depth = 1;
+
+    int empty            = grid.get_empty();
+    int empty_atlastcall = std::max(grid.get_empty() - max_depth, 0);
+
+    // 1'800'000 leaves of game states takes approx 9 seconds
+    while (multiply_down(empty, empty_atlastcall) < 1'500'000) {
+        empty_atlastcall = std::max(empty_atlastcall - 1, 0);
+        max_depth++;
+    }
+    max_depth--;
+
 
     // how many leaves does the search function traversed
     int count = 0;
@@ -234,6 +252,11 @@ vector<Pos> find_promising(Grid &grid, char sign) {
                 // if it comes out of the board
                 if (!n_n_neighbor.inrange(grid.get_size()))
                     continue;
+
+                // discard if they are different
+                if (grid.at(n_neighbor) != grid.at(neighbor)) 
+                    continue;
+                    
                 very_good_candidates.push_back(cand);
             }
         }
@@ -258,6 +281,20 @@ vector<Pos> find_neighbors(Grid &grid, char sign, Pos cell) {
             temp.push_back({x+i, y+j});
         }
     }
+
+    return temp;
+}
+
+// n * n-1 * ... * k
+int multiply_down(int n, int k) {
+    if (k == 0) k = 1;
+    if (n == k) return n;
+
+    int temp = 1;
+    while (n >= k) {
+        temp *= n;
+        n--;
+    };
 
     return temp;
 }
